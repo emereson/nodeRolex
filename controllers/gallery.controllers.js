@@ -1,22 +1,22 @@
-import { PhotoAlbum } from '../models/photoAlbum.model.js';
 import { catchAsync } from '../utils/catchAsync.js';
 import FormData from 'form-data';
 import axios from 'axios';
+import { Gallery } from '../models/gallery.model.js';
 
 export const findAll = catchAsync(async (req, res) => {
-  const photosAlbum = await PhotoAlbum.findAll();
+  const galleries = await Gallery.findAll();
   return res.status(200).json({
     status: 'success',
-    results: photosAlbum.length,
-    photosAlbum,
+    results: galleries.length,
+    galleries,
   });
 });
 export const findOne = catchAsync(async (req, res) => {
-  const { photoAlbum } = req;
+  const { gallery } = req;
 
   return res.status(200).json({
     status: 'success',
-    photoAlbum,
+    gallery,
   });
 });
 
@@ -24,9 +24,7 @@ export const create = catchAsync(async (req, res) => {
   const { id } = req.params;
 
   const sectionImgFiles = req.files['linkImg'];
-  const createdPhotoAlbums = [];
-
-  console.log(sectionImgFiles);
+  const createdGallery = [];
 
   await Promise.all(
     sectionImgFiles.map(async (file) => {
@@ -47,25 +45,25 @@ export const create = catchAsync(async (req, res) => {
 
       const { imagePath } = responseImg.data;
 
-      const photoAlbum = await PhotoAlbum.create({
+      const galerry = await Gallery.create({
         sectionId: id,
         linkImg: imagePath,
       });
 
-      createdPhotoAlbums.push(photoAlbum);
+      createdGallery.push(galerry);
     })
   );
 
   return res.status(200).json({
     status: 'success',
-    message: 'The photoAlbums have been created',
-    photoAlbums: createdPhotoAlbums,
+    message: 'The galerry have been created',
+    galerry: createdGallery,
   });
 });
 
 export const deleteElement = catchAsync(async (req, res) => {
-  const { photoAlbum } = req;
-  const imageName = photoAlbum.linkImg.split('/').pop();
+  const { gallery } = req;
+  const imageName = gallery.linkImg.split('/').pop();
 
   try {
     await axios.delete(`${process.env.SERVER_IMAGE}/delete-image/${imageName}`);
@@ -75,11 +73,11 @@ export const deleteElement = catchAsync(async (req, res) => {
     // Aquí puedes decidir qué hacer en caso de error. Puedes devolver una respuesta de error si es necesario.
   }
 
-  await photoAlbum.destroy();
+  await gallery.destroy();
   return res.status(200).json({
     status: 'success',
-    message: 'photoAlbum has been delete',
-    photoAlbum,
+    message: 'gallery has been delete',
+    gallery,
   });
 });
 
@@ -87,7 +85,7 @@ export const deleteAllElement = catchAsync(async (req, res) => {
   const { section } = req;
 
   await Promise.all(
-    section.photoAlbums.map(async (file) => {
+    section.galleries.map(async (file) => {
       const imageName = file.linkImg.split('/').pop();
 
       try {
@@ -100,17 +98,17 @@ export const deleteAllElement = catchAsync(async (req, res) => {
         // Aquí puedes decidir qué hacer en caso de error. Puedes devolver una respuesta de error si es necesario.
       }
 
-      const photoAlbum = await PhotoAlbum.findOne({
+      const gallery = await Gallery.findOne({
         where: {
           id: file.id,
         },
       });
 
-      if (photoAlbum) {
-        await photoAlbum.destroy();
-        console.log('photoAlbum deleted successfully');
+      if (gallery) {
+        await gallery.destroy();
+        console.log('gallery deleted successfully');
       } else {
-        console.error('photoAlbum not found');
+        console.error('gallery not found');
         // Puedes decidir qué hacer si no se encuentra el SectionVideo
       }
     })

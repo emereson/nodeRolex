@@ -25,7 +25,7 @@ export const findOne = catchAsync(async (req, res) => {
 });
 
 export const create = catchAsync(async (req, res) => {
-  const { title } = req.body;
+  const { title, linkVideo } = req.body;
 
   const sectionImgFile = req.files['sectionImg'][0];
   const formDataImg = new FormData();
@@ -45,29 +45,10 @@ export const create = catchAsync(async (req, res) => {
   );
   const { imagePath } = responseImg.data;
 
-  // Acceder al primer video
-  const videoFile = req.files['video'][0];
-  const formDataVideo = new FormData();
-  formDataVideo.append('video', videoFile.buffer, {
-    filename: videoFile.originalname,
-  });
-
-  // Subir el primer video
-  const responseVideo = await axios.post(
-    `${process.env.SERVER_IMAGE}/saveVideos`,
-    formDataVideo,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  );
-  const { videoPath } = responseVideo.data;
-
   // Crear la sección en la base de datos
   const section = await Section.create({
     title,
-    linkVideo: videoPath,
+    linkVideo,
     sectionImg: imagePath,
   });
 
@@ -80,15 +61,12 @@ export const create = catchAsync(async (req, res) => {
 
 export const update = catchAsync(async (req, res) => {
   const { section } = req;
-  const { title } = req.body;
+  const { title, linkVideo } = req.body;
   const imageName = section.sectionImg.split('/').pop();
-  const videoName = section.linkVideo.split('/').pop(); // Corregido para obtener el nombre del video
 
   const sectionImgFile = req.files['sectionImg']
     ? req.files['sectionImg'][0]
     : null;
-
-  const videoFile = req.files['video'] ? req.files['video'][0] : null;
 
   if (sectionImgFile) {
     const formDataImg = new FormData();
@@ -124,44 +102,10 @@ export const update = catchAsync(async (req, res) => {
     }
   }
 
-  if (videoFile) {
-    const formDataVideo = new FormData();
-    formDataVideo.append('video', videoFile.buffer, {
-      filename: videoFile.originalname,
-    });
-
-    try {
-      await axios.delete(
-        `${process.env.SERVER_IMAGE}/delete-video/${videoName}`
-      );
-
-      const response = await axios.post(
-        `${process.env.SERVER_IMAGE}/saveVideos`,
-        formDataVideo,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      await section.update({
-        linkVideo: response.data.videoPath,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        status: 'error',
-        message:
-          'Internal server error while uploading new video and updating section',
-        error: error.message,
-      });
-    }
-  }
-
-  // Si no se sube un nuevo video, actualiza el título de la sección
-  if (!videoFile && !sectionImgFile) {
+  if (!sectionImgFile) {
     await section.update({
       title,
+      linkVideo,
     });
   }
 

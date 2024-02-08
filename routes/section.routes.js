@@ -18,20 +18,14 @@ router.use(authMiddleware.protect);
 
 router.post(
   '/',
-  upload.fields([
-    { name: 'video', maxCount: 1 },
-    { name: 'sectionImg', maxCount: 1 },
-  ]),
+  upload.fields([{ name: 'sectionImg', maxCount: 1 }]),
   sectionController.create
 );
 
 router
   .route('/:id')
   .patch(
-    upload.fields([
-      { name: 'video', maxCount: 1 },
-      { name: 'sectionImg', maxCount: 1 },
-    ]),
+    upload.fields([{ name: 'sectionImg', maxCount: 1 }]),
     sectionMiddleware.validExistSection,
     sectionController.update
   )

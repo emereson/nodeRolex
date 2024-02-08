@@ -14,6 +14,7 @@ import { sectionRouter } from './routes/section.routes.js';
 import { sectionDescriptionRouter } from './routes/sectionDescription.routes.js';
 import { photoAlbumRouter } from './routes/photoAlbum.routes.js';
 import { sectionVideoRouter } from './routes/sectionVideo.routes.js';
+import { galleryRouter } from './routes/gallery.routes.js';
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use('/api/v1/section', sectionRouter);
 app.use('/api/v1/section-description', sectionDescriptionRouter);
 app.use('/api/v1/photo-album', photoAlbumRouter);
 app.use('/api/v1/section-video', sectionVideoRouter);
+app.use('/api/v1/gallery', galleryRouter);
 
 app.all('*', (req, res, next) => {
   return next(

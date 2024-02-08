@@ -1,3 +1,4 @@
+import { Gallery } from '../models/gallery.model.js';
 import { PhotoAlbum } from '../models/photoAlbum.model.js';
 import { Section } from '../models/section.model.js';
 import { SectionDescription } from '../models/sectionDescription.model.js';
@@ -21,6 +22,9 @@ export const validExistSection = catchAsync(async (req, res, next) => {
       },
       {
         model: SectionVideo,
+      },
+      {
+        model: Gallery,
       },
     ],
   });
