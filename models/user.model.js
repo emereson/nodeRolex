@@ -17,14 +17,35 @@ const User = db.define('users', {
     unique: true,
     allowNull: false,
   },
+  phoneNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  startDate: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  endDate: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  country: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   role: {
-    type: DataTypes.ENUM('admin'),
+    type: DataTypes.ENUM('user', 'admin', 'superadmin'),
+    defaultValue: 'user',
     allowNull: false,
-    defaultValue: 'admin',
+  },
+  membership: {
+    type: DataTypes.ENUM('active', 'disabled'),
+    allowNull: false,
+    defaultValue: 'active',
   },
   status: {
     type: DataTypes.ENUM('active', 'disabled'),

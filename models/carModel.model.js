@@ -1,21 +1,31 @@
 import { DataTypes } from 'sequelize';
 import { db } from '../database/config.js';
 
-const SectionDescription = db.define('sectionDescription', {
+const CarModel = db.define('carModel', {
   id: {
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
     type: DataTypes.INTEGER,
   },
-  sectionId: {
+  idTwo: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  description: {
-    type: DataTypes.TEXT,
+  brandCarId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
+  },
+
+  model: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+
+  carData: {
+    type: DataTypes.JSON,
+    allowNull: true,
   },
 });
 
-export { SectionDescription };
+export { CarModel };

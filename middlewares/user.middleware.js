@@ -7,7 +7,6 @@ export const validExistUser = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({
     where: {
-      status: 'active',
       id,
     },
   });

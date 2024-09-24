@@ -10,11 +10,9 @@ import { AppError } from './utils/AppError.js';
 import { globalErrorHandler } from './controllers/error.controllers.js';
 
 import { usersRouter } from './routes/users.routes.js';
-import { sectionRouter } from './routes/section.routes.js';
-import { sectionDescriptionRouter } from './routes/sectionDescription.routes.js';
-import { photoAlbumRouter } from './routes/photoAlbum.routes.js';
-import { sectionVideoRouter } from './routes/sectionVideo.routes.js';
-import { galleryRouter } from './routes/gallery.routes.js';
+import { yearCarRouter } from './routes/yearCar.routes.js';
+import { carBrandRouter } from './routes/carBrand.routes.js';
+import { carModelRouter } from './routes/carModel.routes.js';
 
 const app = express();
 
@@ -40,11 +38,9 @@ app.use(
 app.use(hpp());
 app.use('/api/v1', limiter);
 app.use('/api/v1/user', usersRouter);
-app.use('/api/v1/section', sectionRouter);
-app.use('/api/v1/section-description', sectionDescriptionRouter);
-app.use('/api/v1/photo-album', photoAlbumRouter);
-app.use('/api/v1/section-video', sectionVideoRouter);
-app.use('/api/v1/gallery', galleryRouter);
+app.use('/api/v1/year-car', yearCarRouter);
+app.use('/api/v1/car-brand', carBrandRouter);
+app.use('/api/v1/car-model', carModelRouter);
 
 app.all('*', (req, res, next) => {
   return next(
